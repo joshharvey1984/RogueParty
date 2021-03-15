@@ -1,5 +1,4 @@
 using UnityEngine;
-using Random = System.Random;
 
 namespace RogueParty.Core {
     public class MonsterController : ActorController {

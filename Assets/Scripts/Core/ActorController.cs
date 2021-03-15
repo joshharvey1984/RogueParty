@@ -10,7 +10,7 @@ namespace RogueParty.Core {
         private static readonly int HitEffect = Shader.PropertyToID("_HitEffectBlend");
         protected GameObject EnemyTarget { get; set; }
         private float attackTimer;
-        private float attackRange = 0.8F;
+        [SerializeField] private float attackRange = 0.8F;
         private float refreshMoveTime = 0.1F;
         private GameObject navMarker;
 
@@ -73,6 +73,10 @@ namespace RogueParty.Core {
             attackTimer = 3.0F;
             PlayAudioClip("weapon_blow");
             EnemyTarget.GetComponent<ActorController>().TakeDamage();
+        }
+
+        public void FireProjectile() {
+            
         }
 
         private void TakeDamage() {
