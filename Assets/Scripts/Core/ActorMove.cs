@@ -8,7 +8,7 @@ namespace RogueParty.Core {
         private ActorAnim actorAnim;
         private SpriteRenderer spriteRenderer;
         
-        [SerializeField] private int _directionFacing = 3;
+        private int _directionFacing = 3;
         private readonly Dictionary<int, string> directionKey = new Dictionary<int, string> {
             {0, "Side"}, {1, "Up"}, {2, "Side"}, {3, "Down"}
         };

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2cb7c24b50427f4cbd1f356981c85a1, type: 3}
+  m_Name: Ilse
+  m_EditorClassIdentifier: 
+  portrait: {fileID: 21300000, guid: ae1f9fee1f847bb419017a6687939cba, type: 3}
+  sprite: {fileID: 4217969469891430171, guid: 15bb12529f067f740801537fa4d60228, type: 3}
+  hitPoints: 80
+  manaPoints: 70
+  attackRange: 6
+  attackSpeed: 2.2

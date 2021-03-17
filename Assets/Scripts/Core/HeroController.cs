@@ -1,8 +1,10 @@
 ﻿using System;
+using RogueParty.Data;
 using UnityEngine;
 
 namespace RogueParty.Core {
     public class HeroController : ActorController {
+        [SerializeField] public Hero hero;
         public event EventHandler OnMouseClick;
 
         private new void Awake() => base.Awake();

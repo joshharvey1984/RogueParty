@@ -5,7 +5,7 @@ namespace RogueParty.Core {
         private Animator Animator { get; set; }
         private string CurrentState { get; set; }
         private string QueueState { get; set; }
-        [SerializeField] private bool animLock;
+        private bool animLock;
 
         private void Start() {
             Animator = GetComponent<Animator>();

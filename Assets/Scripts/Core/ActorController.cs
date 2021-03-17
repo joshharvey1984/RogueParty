@@ -11,6 +11,7 @@ namespace RogueParty.Core {
         protected GameObject EnemyTarget { get; set; }
         private float attackTimer;
         [SerializeField] private float attackRange = 0.8F;
+        [SerializeField] private GameObject attackProjectile;
         private float refreshMoveTime = 0.1F;
         private GameObject navMarker;
 
@@ -18,8 +19,7 @@ namespace RogueParty.Core {
         public event EventHandler OnScreenShake;
         public event EventHandler<AudioClipEventArgs> OnPlayAudioClip;
 
-        public class DamageTextArgs { public string DamageNumber { get; set; }
-        }
+        public class DamageTextArgs { public string DamageNumber { get; set; } }
         public class AudioClipEventArgs { public string AudioClip { get; set; } }
         
         protected void Awake() {
@@ -71,15 +71,19 @@ namespace RogueParty.Core {
         public void AttackHit() {
             if (!EnemyTarget) return;
             attackTimer = 3.0F;
-            PlayAudioClip("weapon_blow");
             EnemyTarget.GetComponent<ActorController>().TakeDamage();
         }
 
         public void FireProjectile() {
-            
+            if (!EnemyTarget) return;
+            attackTimer = 3.0F;
+            var projectile = Instantiate(attackProjectile, transform.position, Quaternion.identity);
+            var script = projectile.GetComponent<Projectile>();
+            script.Target = EnemyTarget;
         }
 
-        private void TakeDamage() {
+        public void TakeDamage() {
+            PlayAudioClip("weapon_blow");
             HitDamageFlash(0.1F);
             OnDamageText?.Invoke(this, new DamageTextArgs { DamageNumber = 7.ToString() });
             OnScreenShake?.Invoke(this, EventArgs.Empty);
