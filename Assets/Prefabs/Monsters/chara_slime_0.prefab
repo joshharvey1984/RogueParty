@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 6484099631407712485}
   - component: {fileID: 9023117405992745599}
   - component: {fileID: 5068718411894927626}
+  - component: {fileID: 5633839912300914711}
   m_Layer: 11
   m_Name: chara_slime_0
   m_TagString: Enemy
@@ -250,6 +251,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca15f5d83216e445ac644535ece4ed6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actor: {fileID: 11400000, guid: fbf2980b78882ff4cb4e5e024b2086ec, type: 2}
+  attackRange: 0.8
+  attackProjectile: {fileID: 0}
 --- !u!61 &4037961849406752884
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -288,7 +292,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10fe23a909929774d86d27d214a898f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animLock: 0
 --- !u!114 &6484099631407712485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -301,7 +304,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ea8bfb10858b4140a1a0a36a12812ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _directionFacing: 3
 --- !u!114 &9023117405992745599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,3 +338,19 @@ NavMeshAgent:
   m_BaseOffset: 0.085
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 0
+--- !u!114 &5633839912300914711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433770786259283694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66e3e8a51222bbd40b098d34e924646f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skills: []
+  onStatusEffect:
+    m_PersistentCalls:
+      m_Calls: []

@@ -1,3 +1,4 @@
+using RogueParty.Core.Actors;
 using UnityEngine;
 
 namespace RogueParty.Core {
@@ -11,7 +12,7 @@ namespace RogueParty.Core {
                     Target.transform.position, speed * Time.deltaTime);
             }
             else {
-                Target.GetComponent<ActorController>().TakeDamage();
+                Target.GetComponent<ActorController>().TakeDamage(5);
                 Destroy(gameObject);
             }
         }

@@ -1,4 +1,5 @@
 using System.Linq;
+using RogueParty.Core.Actors;
 using UnityEngine;
 
 namespace RogueParty.Core {
