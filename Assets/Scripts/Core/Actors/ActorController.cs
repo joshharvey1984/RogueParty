@@ -1,23 +1,27 @@
 using System;
+using System.Collections.Generic;
+using RogueParty.Core.UI;
 using RogueParty.Data;
 using UnityEngine;
+using static RogueParty.Core.Actors.AttributeName;
 
 namespace RogueParty.Core.Actors {
     public class ActorController : MonoBehaviour {
         private Renderer _renderer;
+        private Transform _transform;
         public Actor actor;
         private ActorMove actorMove;
-        public ActorStatus ActorStatus { get; private set; }
+        public ActorStatus actorStatus;
         public SelectionCircle SelectionCircle { get; private set; }
         private static readonly int Outline = Shader.PropertyToID("_OutlineAlpha");
         private static readonly int HitEffect = Shader.PropertyToID("_HitEffectBlend");
-        protected GameObject EnemyTarget { get; set; }
+        private static readonly int MotionBlurEffect = Shader.PropertyToID("_MotionBlurDist");
+        public GameObject EnemyTarget { get; set; }
         private float attackTimer;
-        [SerializeField] private float attackRange = 0.8F;
-        [SerializeField] private GameObject attackProjectile;
         private float refreshMoveTime = 0.1F;
         private GameObject navMarker;
-        
+        private GameObject skillPopup;
+
         public event EventHandler<DamageTextArgs> OnDamageText;
         public event EventHandler OnScreenShake;
         public event EventHandler<AudioClipEventArgs> OnPlayAudioClip;
@@ -27,27 +31,32 @@ namespace RogueParty.Core.Actors {
         
         protected void Awake() {
             _renderer = GetComponent<Renderer>();
+            _transform = transform;
+            actor = GetComponent<Actor>();
             actorMove = gameObject.GetComponent<ActorMove>();
-            ActorStatus = gameObject.GetComponent<ActorStatus>();
+            actorStatus = gameObject.GetComponent<ActorStatus>();
             SelectionCircle = transform.GetChild(0).gameObject.GetComponent<SelectionCircle>();
+            skillPopup = Resources.Load<GameObject>("Prefabs/UI/SkillPopup");
         }
 
         protected void OnEnable() {
-            ActorStatus.SetActor(actor);
+            actorStatus.SetActor(actor);
         }
 
         protected void Update() {
             UpdateAttackTime();
             if (EnemyTarget) CheckEngagement();
         }
-        
+
+        public static int GetShaderPropertyID(string property) => Shader.PropertyToID(property);
+
         private void UpdateAttackTime() {
             attackTimer -= Time.deltaTime;
             if (attackTimer <= 0) attackTimer = 0;
         }
 
         private void CheckEngagement() {
-            if (Vector2.Distance(transform.position, EnemyTarget.transform.position) <= attackRange + 0.15F) {
+            if (Vector2.Distance(transform.position, EnemyTarget.transform.position) <= GetAttackRange + 0.15F) {
                 if (navMarker) Destroy(navMarker);
                 AttackEnemy();
                 return;
@@ -66,6 +75,11 @@ namespace RogueParty.Core.Actors {
         protected void BeginMove(Vector2 position) {
             actorMove.Move(CreateNavMarker(position));
         }
+
+        public void DirectMoveToObject(GameObject position, int speed) {
+            if (navMarker) Destroy(navMarker);
+            actorMove.DirectMove(position, speed);
+        }
         
         private void AttackEnemy() {
             actorMove.FaceTarget(EnemyTarget);
@@ -79,23 +93,38 @@ namespace RogueParty.Core.Actors {
         
         public void AttackHit() {
             if (!EnemyTarget) return;
-            attackTimer = 3.0F;
-            EnemyTarget.GetComponent<ActorController>().TakeDamage(GetAttribute(AttributeName.Damage));
+            attackTimer = GetAttackTimer;
+            EnemyTarget.GetComponent<ActorController>().TakeDamage(GetAttribute(Damage));
         }
 
+        public void ProjectileHit(GameObject target) {
+            target.GetComponent<ActorController>().TakeDamage(GetAttribute(Damage));
+        }
+
+        private float GetAttackTimer => 100 / Convert.ToSingle(GetAttribute(AttackSpeed));
+        private float GetAttackRange => Convert.ToSingle(GetAttribute(AttackRange)) / 100;
+        
         public void FireProjectile() {
             if (!EnemyTarget) return;
-            attackTimer = 3.0F;
-            var projectile = Instantiate(attackProjectile, transform.position, Quaternion.identity);
+            attackTimer = GetAttackTimer;
+            var projectile = Instantiate(actor.actorProjectile, transform.position, Quaternion.identity);
             var script = projectile.GetComponent<Projectile>();
+            script.firedBy = this;
             script.Target = EnemyTarget;
         }
 
-        public void TakeDamage(int? damage = 0) {
+        public void FireSpecialProjectile(GameObject target, GameObject projectile, List<SkillBehaviour> projectileBehaviours) {
+            var specialProjectile = Instantiate(projectile, transform.position, Quaternion.identity);
+            var script = specialProjectile.GetComponent<Projectile>();
+            script.Target = target;
+            script.projectileBehaviours = projectileBehaviours;
+        }
+
+        private void TakeDamage(int? damage = 0) {
             PlayAudioClip("weapon_blow");
             HitDamageFlash(0.1F);
-            var damageTaken = damage - GetAttribute(AttributeName.DamageReduction);
-            ActorStatus.TakeDamage(damageTaken);
+            var damageTaken = damage - GetAttribute(DamageReduction);
+            actorStatus.TakeDamage(damageTaken);
             OnDamageText?.Invoke(this, new DamageTextArgs { DamageNumber = damageTaken.ToString() });
             OnScreenShake?.Invoke(this, EventArgs.Empty);
             actorMove.HitAnimation();
@@ -107,18 +136,26 @@ namespace RogueParty.Core.Actors {
         }
 
         public void ExecuteSkill(Skill skill) {
-            skill.Trigger();
+            if (skill.Trigger(this)) SkillPopup(skill);
         }
 
-        public int? GetAttribute(AttributeName attribute) => ActorStatus.ActorAttributes.Get(attribute);
-        public bool GetToggle(AbilityToggleName toggle) => (bool)ActorStatus.AbilityToggles.GetToggle(toggle);
-
+        private int? GetAttribute(AttributeName attribute) => actorStatus.ActorAttributes.Get(attribute);
+        private bool GetToggle(AbilityToggleName toggle) => (bool)actorStatus.AbilityToggles.GetToggle(toggle);
         private void StopDamageFlash() => _renderer.material.SetFloat(HitEffect, 0F);
+
+        private void SkillPopup(Skill skill) {
+            var popup = Instantiate(skillPopup, _transform.position, Quaternion.identity, _transform);
+            popup.GetComponent<SkillPopup>().SetSprite(skill.Icon);
+        }
 
         private void PlayAudioClip(string audioClip) {
             OnPlayAudioClip?.Invoke(this, new AudioClipEventArgs { AudioClip = audioClip });
         }
-        
+
+        public void SetDeterioratingEffect(int effect, float amount) {
+            _renderer.material.SetFloat(effect, amount);
+        }
+
         private GameObject CreateNavMarker(Vector2 position) {
             navMarker = new GameObject { name = gameObject.name + " Nav", tag = "Nav" };
             navMarker.transform.position = position;
@@ -134,7 +171,7 @@ namespace RogueParty.Core.Actors {
         private Vector2 CalculateEnemyNavMarker(GameObject enemy) {
             var enemyPosition = enemy.transform.position;
             var heroPosition = transform.position;
-            var dist = Vector2.Distance(heroPosition, enemyPosition) - attackRange;
+            var dist = Vector2.Distance(heroPosition, enemyPosition) - (actor.attackRange / 100);
 
             var diff = enemyPosition - heroPosition;
             var angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;

@@ -3,7 +3,7 @@ using RogueParty.Core.Actors;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace RogueParty.Core {
+namespace RogueParty.Core.UI {
     public class DamageTextFactory : MonoBehaviour {
         private Camera _camera;
         [SerializeField] private GameObject damageNumberPrefab;

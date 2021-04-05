@@ -13,6 +13,7 @@ namespace RogueParty.Core.Actors {
             actorAttributes.Add(new ActorAttribute(AttributeName.DamageReduction, actor.damageReduction));
             actorAttributes.Add(new ActorAttribute(AttributeName.MoveSpeed, actor.moveSpeed));
             actorAttributes.Add(new ActorAttribute(AttributeName.AttackSpeed, actor.attackSpeed));
+            actorAttributes.Add(new ActorAttribute(AttributeName.AttackRange, actor.attackRange));
         }
 
         public int? Get(AttributeName attributeName) => actorAttributes.FirstOrDefault(a => 

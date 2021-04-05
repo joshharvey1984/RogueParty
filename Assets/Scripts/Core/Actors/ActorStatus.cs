@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace RogueParty.Core.Actors {
     public class ActorStatus : MonoBehaviour {
-        public List<Skill> skills;
+        public List<Skill> skills = new List<Skill>();
         
         public ActorAttributes ActorAttributes;
         public int? currentHitPoints;
@@ -21,8 +21,11 @@ namespace RogueParty.Core.Actors {
             ActorAttributes = new ActorAttributes(actor);
             currentHitPoints = ActorAttributes.Get(AttributeName.HitPoints);
             currentManaPoints = ActorAttributes.Get(AttributeName.ManaPoints);
-
             AbilityToggles = new ActorAbilityToggles();
+            skills.AddRange(actor.skills);
+            foreach (var skill in skills) {
+                skill.Icon = Resources.Load<Sprite>($"Sprites/UI/SkillIcons/{skill.GetType().Name}");
+            }
         }
         
         public void Update() {

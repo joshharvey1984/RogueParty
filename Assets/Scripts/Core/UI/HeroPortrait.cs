@@ -1,4 +1,5 @@
 using System;
+using RogueParty.Core.Actors;
 using UnityEngine;
 
 namespace RogueParty.Core.UI {

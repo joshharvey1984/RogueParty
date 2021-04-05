@@ -1,14 +1,24 @@
 ﻿using System;
-using RogueParty.Core.Actors;
 using RogueParty.Core.UI;
+using RogueParty.Data;
 using UnityEngine;
 
-namespace RogueParty.Core {
+namespace RogueParty.Core.Actors {
     public class HeroController : ActorController {
+        [SerializeField] private GameObject pointTarget;
+        private ITargeting currentTargeting;
+        public GameObject instPointTarget;
         public event EventHandler OnMouseClick;
-
+        public event EventHandler<TargetingModeArgs> OnTargetingMode;
+        public class TargetingModeArgs {
+            public ITargeting Targeting; 
+        }
         private new void Awake() => base.Awake();
 
+        private new void Update() {
+            base.Update();
+            if (currentTargeting != null) RedrawTargeting();
+        }
         private void OnMouseDown() => OnMouseClick?.Invoke(this, EventArgs.Empty);
         
         public void SetMovePosition(Vector2 position) {
@@ -39,6 +49,27 @@ namespace RogueParty.Core {
 
         public void SkillButtonClicked(object sender, SkillButton.SkillClickArgs skillClickArgs) {
             ExecuteSkill(skillClickArgs.SkillClicked);
+        }
+        
+        public void TargetingMode(ITargeting targeting) {
+            currentTargeting = targeting;
+            OnTargetingMode?.Invoke(this, new TargetingModeArgs {Targeting = targeting});
+        }
+
+        public void TargetingModeOff() {
+            currentTargeting = null;
+            EraseTargeting();
+        }
+        
+        private void RedrawTargeting() {
+            EraseTargeting();
+            instPointTarget = Instantiate(pointTarget, transform.position, Quaternion.identity);
+            instPointTarget.GetComponent<LineRenderer>().SetPositions(new []
+                {transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition)});
+        }
+
+        private void EraseTargeting() {
+            if (instPointTarget != null) Destroy(instPointTarget);
         }
     }
 }

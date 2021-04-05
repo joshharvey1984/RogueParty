@@ -1,8 +1,3 @@
-using UnityEngine;
-
-namespace RogueParty.Data.Actors {
-    [CreateAssetMenu(fileName = "New Hero", menuName = "Hero")]
-    public class Hero : Actor {
-        
-    }
+namespace RogueParty.Data.Actors { 
+    public class Hero : Actor { }
 }

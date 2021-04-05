@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using RogueParty.Core.UI;
+using RogueParty.Core.Actors;
 using UnityEngine;
 
-namespace RogueParty.Core {
+namespace RogueParty.Core.UI {
     public class CharacterBarHolder : MonoBehaviour {
         public List<GameObject> characterBars;
 

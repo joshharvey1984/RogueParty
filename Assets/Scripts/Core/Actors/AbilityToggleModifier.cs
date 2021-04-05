@@ -2,6 +2,6 @@
     public class AbilityToggleModifier {
         public readonly AbilityToggleName AbilityToggleName;
 
-        public AbilityToggleModifier(AbilityToggleName abilityToggleName) => this.AbilityToggleName = abilityToggleName;
+        public AbilityToggleModifier(AbilityToggleName abilityToggleName) => AbilityToggleName = abilityToggleName;
     }
 }

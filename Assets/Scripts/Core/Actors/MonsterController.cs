@@ -1,7 +1,6 @@
-using RogueParty.Core.Actors;
 using UnityEngine;
 
-namespace RogueParty.Core {
+namespace RogueParty.Core.Actors {
     public class MonsterController : ActorController {
         private void Start() {
             GetNearestTarget();

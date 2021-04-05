@@ -1,3 +1,4 @@
+using RogueParty.Core.Actors;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,8 +17,8 @@ namespace RogueParty.Core.UI {
             HeroController = heroController;
             portrait.GetComponent<HeroPortrait>().heroController = HeroController;
             skillBar.GetComponent<SkillBar>().SetSkills(HeroController);
-            HeroController.ActorStatus.onStatusEffect.AddListener(statusBar.GetComponent<StatusBar>().AddStatusIcon);
-            HeroController.ActorStatus.onPointsChange.AddListener(UpdatePointBars);
+            HeroController.actorStatus.onStatusEffect.AddListener(statusBar.GetComponent<StatusBar>().AddStatusIcon);
+            HeroController.actorStatus.onPointsChange.AddListener(UpdatePointBars);
         }
 
         public void Start() {
@@ -25,8 +26,8 @@ namespace RogueParty.Core.UI {
         }
 
         public void UpdatePointBars() {
-            healthText.GetComponent<Text>().text = HeroController.ActorStatus.currentHitPoints.ToString();
-            manaText.GetComponent<Text>().text = HeroController.ActorStatus.currentManaPoints.ToString();
+            healthText.GetComponent<Text>().text = HeroController.actorStatus.currentHitPoints.ToString();
+            manaText.GetComponent<Text>().text = HeroController.actorStatus.currentManaPoints.ToString();
         }
     }
 }

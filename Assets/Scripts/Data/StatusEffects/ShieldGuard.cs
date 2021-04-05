@@ -4,8 +4,8 @@ using static RogueParty.Core.Actors.AttributeName;
 
 namespace RogueParty.Data.StatusEffects {
     internal class ShieldGuard : StatusEffect {
-        public ShieldGuard() {
-            Time = 5;
+        public ShieldGuard(float time) {
+            Time = time;
             AnimationChanges = new Dictionary<string, string> {{"Walk", "GuardWalk"}, {"Idle", "GuardIdle"}};
             AttributeChanges = new List<ActorAttributeModifier> {
                 new ActorAttributeModifier(DamageReduction, 5),

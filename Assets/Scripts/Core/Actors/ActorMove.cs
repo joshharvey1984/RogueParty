@@ -13,6 +13,9 @@ namespace RogueParty.Core.Actors {
             {0, "Side"}, {1, "Up"}, {2, "Side"}, {3, "Down"}
         };
 
+        public GameObject directMoveTarget;
+        public int directMoveSpeed;
+
         private void Awake() {
             spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             actorAnim = gameObject.GetComponent<ActorAnim>();
@@ -22,9 +25,35 @@ namespace RogueParty.Core.Actors {
             actorNavAgent.OnStartNavAgent += WalkAnimation;
         }
 
+        private void Update() {
+            if (directMoveTarget) UpdateDirectMove();
+        }
+
+        private void UpdateDirectMove() {
+            var targetPos = directMoveTarget.transform.position;
+            if (Vector2.Distance(transform.position, targetPos) > 0.1F) {
+                transform.position = Vector2.MoveTowards
+                    (transform.position, targetPos, directMoveSpeed * Time.deltaTime);
+            }
+            else {
+                DirectMoveComplete();
+            }
+        }
+
         public void Move(GameObject target) {
             FaceTarget(target);
             actorNavAgent.SetTarget(target);
+        }
+
+        public void DirectMove(GameObject target, int speed) {
+            FaceTarget(target);
+            directMoveSpeed = speed;
+            directMoveTarget = target;
+        }
+
+        private void DirectMoveComplete() {
+            Destroy(directMoveTarget);
+            directMoveTarget = null;
         }
 
         private int DirectionCalculate(Vector3 targetPosition) {

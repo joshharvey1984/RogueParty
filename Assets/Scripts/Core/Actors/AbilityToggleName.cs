@@ -2,6 +2,7 @@
     public enum AbilityToggleName {
         CanAttack,
         CanMove,
-        CanCast
+        CanCast,
+        HitFlash
     }
 }

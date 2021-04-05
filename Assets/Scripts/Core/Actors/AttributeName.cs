@@ -5,6 +5,7 @@
         Damage,
         DamageReduction,
         MoveSpeed,
-        AttackSpeed
+        AttackSpeed,
+        AttackRange
     }
 }

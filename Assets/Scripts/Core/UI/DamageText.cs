@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace RogueParty.Core {
+namespace RogueParty.Core.UI {
     public class DamageText : MonoBehaviour {
         private Transform _transform;
         private Text _text;

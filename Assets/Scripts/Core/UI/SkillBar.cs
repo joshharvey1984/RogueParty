@@ -1,19 +1,29 @@
 using System.Collections.Generic;
-using RogueParty.Core.UI;
+using System.Linq;
+using RogueParty.Core.Actors;
+using RogueParty.Data;
 using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 
-namespace RogueParty.Core {
+namespace RogueParty.Core.UI {
     public class SkillBar : MonoBehaviour {
-        public List<GameObject> skillButtons;
+        private HeroController _heroController;
+        private List<SkillButton> skillButtons = new List<SkillButton>();
+
+        private void Awake() {
+            skillButtons = GetComponentsInChildren<SkillButton>().ToList();
+        }
 
         public void SetSkills(HeroController heroController) {
-            var i = 0;
-            foreach (var heroSkill in heroController.ActorStatus.skills) {
-                var skillButton = skillButtons[i].GetComponent<SkillButton>();
-                skillButton.SetSkill(heroSkill);
-                skillButton.OnMouseClick += heroController.SkillButtonClicked;
-                i++;
-            }
+            _heroController = heroController;
+            foreach (var heroSkill in heroController.actorStatus.skills) SetSkill(heroSkill);
+        }
+
+        private void SetSkill(Skill skill) {
+            var emptySkillButton = skillButtons.FirstOrDefault(sb => sb.Skill == null);
+            Debug.Assert(emptySkillButton != null, nameof(emptySkillButton) + " != null");
+            emptySkillButton.SetSkill(skill);
+            emptySkillButton.OnMouseClick += _heroController.SkillButtonClicked;
         }
     }
 }
