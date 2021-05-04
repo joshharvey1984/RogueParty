@@ -7,6 +7,7 @@ namespace RogueParty.Core.Actors {
         }
 
         private void GetNearestTarget() {
+            if (!targetable) return;
             var targets = FindObjectsOfType<HeroController>();
             foreach (var target in targets) {
                 if (EnemyTarget == null) EnemyTarget = target.gameObject;

@@ -18,7 +18,7 @@ namespace RogueParty.Data {
 
         public void Targeted(GameObject targetPosition) {
             TargetPosition = targetPosition;
-            Skill.Execute(this);
+            Skill.Cast(ActorController);
         }
     }
 }

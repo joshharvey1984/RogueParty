@@ -64,6 +64,7 @@ namespace RogueParty.Core.UI {
         private void KeyButton(bool on) => keyButton.color = on ? Color.white : Color.gray;
         private void Icon(bool on) => _renderer.color = on ? Color.white : new Color(0.25F, 0.25F, 0.25F);
         private void CoolDownText(float coolDown) {
+            if (coolDownTime) Destroy(coolDownTime.gameObject);
             coolDownTime = canvas.GetComponent<CreateText>().CreateUIText(gameObject.transform.position);
             var cd = (int) coolDown;
             if (coolDown > 0) coolDownTime.text = cd.ToString();

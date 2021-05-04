@@ -18,6 +18,7 @@ namespace RogueParty.Core.Actors {
         }
 
         private void Update() {
+            if (!Agent.enabled) return;
             if (!Agent.isStopped) CheckForStop();
         }
 
@@ -26,7 +27,7 @@ namespace RogueParty.Core.Actors {
                 Vector2.Distance(transform.position, TargetDestination.transform.position) < 0.05F) StopNavAgent();
         }
 
-        private void StopNavAgent() {
+        public void StopNavAgent() {
             if (TargetDestination) Destroy(TargetDestination);
             Agent.isStopped = true;
             OnStopNavAgent?.Invoke(this, EventArgs.Empty);

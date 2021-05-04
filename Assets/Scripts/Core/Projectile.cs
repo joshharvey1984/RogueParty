@@ -9,14 +9,19 @@ namespace RogueParty.Core {
         public GameObject Target { get; set; }
         private float speed = 15.0F;
         public List<SkillBehaviour> projectileBehaviours;
+        public List<GameObject> affectedGamObjects;
 
         private void Update() {
             CheckDistance();
-            if (projectileBehaviours != null) CheckCollider();
         }
 
-        private void CheckCollider() {
-            
+        private void OnTriggerEnter2D(Collider2D other) {
+            if (other.gameObject.CompareTag("Enemy") && !affectedGamObjects.Contains(other.gameObject)) {
+                foreach (var projectileBehaviour in projectileBehaviours) {
+                    projectileBehaviour.Execute(other.gameObject);
+                    affectedGamObjects.Add(other.gameObject);
+                }
+            }
         }
 
         private void CheckDistance() {

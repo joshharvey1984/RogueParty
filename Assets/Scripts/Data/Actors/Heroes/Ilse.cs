@@ -13,6 +13,7 @@ namespace RogueParty.Data.Actors.Heroes {
             
             skills.Add(new Dash());
             skills.Add(new Powershot());
+            skills.Add(new Heal());
         }
     }
 }

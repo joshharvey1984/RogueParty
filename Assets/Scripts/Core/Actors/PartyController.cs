@@ -4,6 +4,7 @@ using System.Linq;
 using RogueParty.Core.UI;
 using RogueParty.Data;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace RogueParty.Core.Actors {
     public class PartyController : MonoBehaviour {
@@ -40,6 +41,9 @@ namespace RogueParty.Core.Actors {
             if (Input.GetKeyUp(KeyCode.W)) heroControllers[0].ExecuteSkill(heroControllers[0].actorStatus.skills[1]);
             if (Input.GetKeyUp(KeyCode.A)) heroControllers[1].ExecuteSkill(heroControllers[1].actorStatus.skills[0]);
             if (Input.GetKeyUp(KeyCode.S)) heroControllers[1].ExecuteSkill(heroControllers[1].actorStatus.skills[1]);
+            if (Input.GetKeyUp(KeyCode.D)) heroControllers[1].ExecuteSkill(heroControllers[1].actorStatus.skills[2]);
+            if (Input.GetKeyUp(KeyCode.Z)) heroControllers[2].ExecuteSkill(heroControllers[2].actorStatus.skills[0]);
+            if (Input.GetKeyUp(KeyCode.X)) heroControllers[2].ExecuteSkill(heroControllers[2].actorStatus.skills[1]);
         }
 
         private void SelectHero(HeroController heroController) {
@@ -62,9 +66,19 @@ namespace RogueParty.Core.Actors {
         private void OnPortraitClicked(object sender, HeroPortrait.PortraitClickArgs e) => SelectHero(e.heroController);
         
         private void RightClick(Vector3 mousePosition) {
-            var interactable = GetInteractable();
-            if (!interactable) SelectedHeroController.SetMovePosition(mousePosition);
-            else SelectedHeroController.EngageEnemy(interactable);
+            var interactable = GetInteractable(mousePosition, "Clickable");
+            if (!interactable) CheckValidMove(mousePosition);
+            else RightClickEnemy(interactable);
+        }
+
+        private void CheckValidMove(Vector3 mousePosition) {
+            if(GetInteractable(mousePosition, "Nav"))
+                SelectedHeroController.SetMovePosition(mousePosition);
+        }
+
+        private void RightClickEnemy(GameObject enemy) {
+            if (enemy.GetComponent<ActorController>().targetable)
+                SelectedHeroController.EngageEnemy(enemy);
         }
 
         private void LeftClick(Vector3 mousePosition) {
@@ -75,9 +89,9 @@ namespace RogueParty.Core.Actors {
             targetingMode = null;
         }
 
-        private GameObject GetInteractable() {
-            var results = Physics2D.RaycastAll(Camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            return (from hit in results where hit.collider.gameObject.layer == LayerMask.NameToLayer("Clickable") 
+        private GameObject GetInteractable(Vector3 mousePosition, string layer) {
+            var results = Physics2D.RaycastAll(mousePosition, Vector2.zero);
+            return (from hit in results where hit.collider.gameObject.layer == LayerMask.NameToLayer(layer) 
                 select hit.collider.gameObject).FirstOrDefault();
         }
     }

@@ -10,6 +10,5 @@ namespace RogueParty.Data {
         public List<ActorAttributeModifier> AttributeChanges;
         public List<ActorAttributeModifier> ActorAttributeModifiers;
         public List<AbilityToggleModifier> AbilityToggles;
-
     }
 }

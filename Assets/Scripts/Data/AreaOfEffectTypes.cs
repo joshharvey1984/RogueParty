@@ -4,6 +4,7 @@
         EnemiesInRange,
         AlliesInRange,
         AllInRange,
-        All
+        All,
+        SingleUnit
     }
 }

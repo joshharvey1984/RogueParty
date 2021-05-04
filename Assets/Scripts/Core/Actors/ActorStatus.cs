@@ -15,7 +15,9 @@ namespace RogueParty.Core.Actors {
         private readonly ActiveStatusEffects activeStatusEffects = new ActiveStatusEffects();
         
         public UnityEvent<StatusEffect> onStatusEffect = new UnityEvent<StatusEffect>();
+        public UnityEvent<StatusEffect> onStatusEffectOff = new UnityEvent<StatusEffect>();
         public UnityEvent onPointsChange = new UnityEvent();
+        public UnityEvent onDeath = new UnityEvent();
 
         public void SetActor(Actor actor) {
             ActorAttributes = new ActorAttributes(actor);
@@ -40,7 +42,7 @@ namespace RogueParty.Core.Actors {
         }
 
         private void Death() {
-            
+            onDeath.Invoke();
         }
 
         private void UpdateStatusEffects() {
@@ -49,15 +51,18 @@ namespace RogueParty.Core.Actors {
         
         public void ApplyStatusEffect(StatusEffect statusEffect) {
             activeStatusEffects.Add(statusEffect);
-            ActorAttributes.AddModifiers(statusEffect.AttributeChanges);
-            AbilityToggles.AddModifiers(statusEffect.AbilityToggles);
+            if (statusEffect.AttributeChanges != null) ActorAttributes.AddModifiers(statusEffect.AttributeChanges);
+            if (statusEffect.AbilityToggles != null) AbilityToggles.AddModifiers(statusEffect.AbilityToggles);
             onStatusEffect.Invoke(statusEffect);
         }
 
         private void RemoveStatusEffect(ActiveStatusEffect statusEffect) {
             activeStatusEffects.Remove(statusEffect);
-            ActorAttributes.RemoveModifiers(statusEffect.StatusEffect.AttributeChanges);
-            AbilityToggles.RemoveModifiers(statusEffect.StatusEffect.AbilityToggles);
+            if (statusEffect.StatusEffect.AttributeChanges != null) 
+                ActorAttributes.RemoveModifiers(statusEffect.StatusEffect.AttributeChanges);
+            if (statusEffect.StatusEffect.AbilityToggles != null) 
+                AbilityToggles.RemoveModifiers(statusEffect.StatusEffect.AbilityToggles);
+            onStatusEffectOff.Invoke(statusEffect.StatusEffect);
         }
     }
 }

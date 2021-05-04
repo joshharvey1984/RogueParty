@@ -29,5 +29,12 @@ namespace RogueParty.Core.Actors {
             Animator.Play(QueueState);
             CurrentState = QueueState;
         }
+
+        public void DeathAnimation() {
+            QueueState = null;
+            animLock = true;
+            Animator.Play("Die");
+            CurrentState = "Die";
+        }
     }
 }

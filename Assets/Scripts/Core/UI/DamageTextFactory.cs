@@ -18,6 +18,7 @@ namespace RogueParty.Core.UI {
             damagePosition.y += 20F;
             var damageNumber = Instantiate(damageNumberPrefab, damagePosition, Quaternion.identity, transform);
             damageNumber.GetComponent<Text>().text = e.DamageNumber;
+            damageNumber.GetComponent<Text>().color = e.TextColor;
         }
     }
 }

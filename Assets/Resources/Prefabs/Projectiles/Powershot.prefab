@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8967168428558903913}
   - component: {fileID: 8979860033220564638}
   - component: {fileID: -6601824052426639185}
+  - component: {fileID: 505803895233022261}
   m_Layer: 0
   m_Name: Powershot
   m_TagString: Untagged
@@ -97,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firedBy: {fileID: 0}
+  affectedGamObjects: []
 --- !u!61 &-6601824052426639185
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -123,3 +125,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.41, y: 0.17}
   m_EdgeRadius: 0
+--- !u!50 &505803895233022261
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391055705874352347}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 1
+  m_Mass: 0.0001
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

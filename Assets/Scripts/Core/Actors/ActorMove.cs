@@ -45,6 +45,10 @@ namespace RogueParty.Core.Actors {
             actorNavAgent.SetTarget(target);
         }
 
+        public void StopMove() {
+            actorNavAgent.StopNavAgent();
+        }
+
         public void DirectMove(GameObject target, int speed) {
             FaceTarget(target);
             directMoveSpeed = speed;
@@ -85,6 +89,14 @@ namespace RogueParty.Core.Actors {
 
         public void HitAnimation() {
             actorAnim.PlayAnimationOnce($"Hit_{directionKey[_directionFacing]}", $"Idle_{directionKey[_directionFacing]}");
+        }
+
+        public void DieAnimation() {
+            actorAnim.DeathAnimation();
+        }
+
+        public void CastAnimation(string anim) {
+            actorAnim.ChangeAnimationState($"{anim}_{directionKey[_directionFacing]}");
         }
     }
 }
